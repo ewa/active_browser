@@ -53,6 +53,7 @@ def mkrg(command):
 
     def do_it(url):
         return run_generic(command, url)
+    do_it.func_name = 'do_it(%s,...)'%(command)
     return do_it
 
     
@@ -94,7 +95,11 @@ def main(argv):
         b_run  = b[2]
         if b_name in running_browsers:
             prioritized.append((b_name, b_run))
-    print prioritized
+    if verbose:
+        print "Prioritized browser options:", prioritized
+    if len(prioritized) == 0:
+        sys.stderr.write("No browser available!  Consider adding a default with the match_all predicate.\n")
+        sys.exit(1)
     best_browser = prioritized[0]
     (b_name, b_run) = best_browser
     print "Delegating to", b_name
